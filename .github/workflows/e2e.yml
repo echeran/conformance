@@ -20,7 +20,19 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - run: sh generateDataAndRun.sh
+      - run: sh generateDataAndRun.sh | tee e2e-output.txt
+      - name: Debug
+        run: |
+          pwd
+          cd TEMP_DATA/testReports
+          pwd
+          ls -l *
+          find . -name "*.html"
+          pwd
+          cd ../..
+          pwd
+          ls -l *
+          echo "did we see e2e-output.txt in the root?"
       - name: Setup Pages
         id: pages
         uses: actions/configure-pages@v3
@@ -31,3 +43,8 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v1
+      - name: Debug - upload e2e-output.txt
+        uses: actions/upload-artifact@v3
+        with:
+          name: debug-e2e-output
+          path: e2e-output.txt
